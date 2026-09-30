@@ -1,0 +1,69 @@
+﻿<div class="deviations-container">
+  <!-- Cabecera de Página -->
+  <div class="page-header">
+    <div>
+      <h2>Registro de Desviaciones de Calidad</h2>
+      <p class="subtitle">Inspección de incidentes y hallazgos técnicos registrados en los lotes de producción.</p>
+    </div>
+    <a routerLink="/deviations/new" class="btn-create">⚠️ Reportar Desviación</a>
+  </div>
+
+  <!-- Barra de Búsqueda y Filtro con Lupa -->
+  <div class="search-filter-bar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        placeholder="Buscar por ID de Desviación, Lote o Descripción..."
+        [(ngModel)]="searchTerm"
+      />
+    </div>
+
+    <div class="filter-box">
+      <select [(ngModel)]="selectedSeverity">
+        <option value="ALL">Todas las severidades</option>
+        <option value="CRITICAL">Crítica</option>
+        <option value="HIGH">Alta</option>
+        <option value="MEDIUM">Media</option>
+        <option value="LOW">Baja</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Vista Tabular de Desviaciones -->
+  <div class="table-card">
+    <table class="custom-table">
+      <thead>
+      <tr>
+        <th>ID Desviación</th>
+        <th>Lote Afectado</th>
+        <th>Descripción del Hallazgo</th>
+        <th>Severidad</th>
+        <th>Estado</th>
+        <th>Fecha Registro</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let dev of filteredDeviations">
+        <td><strong>{{ dev.id }}</strong></td>
+        <td><code>{{ dev.lotId }}</code></td>
+        <td>{{ dev.description }}</td>
+        <td>
+            <span class="badge" [ngClass]="dev.severity.toLowerCase()">
+              {{ dev.severity }}
+            </span>
+        </td>
+        <td>
+          <span class="status-tag">{{ dev.status }}</span>
+        </td>
+        <td>{{ dev.reportedAt | date:'dd/MM/yyyy' }}</td>
+      </tr>
+      <tr *ngIf="filteredDeviations.length === 0">
+        <td colspan="6" class="empty-state">
+          No se encontraron desviaciones registradas con los filtros seleccionados.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

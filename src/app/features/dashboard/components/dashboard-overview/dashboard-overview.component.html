@@ -1,0 +1,134 @@
+﻿
+<div class="dashboard-container">
+  <!-- 1. Tarjetas KPI Superiores -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-content">
+        <span class="title">Dispositivos Activos</span>
+        <h2>5 <span class="subtitle">de 8 total</span></h2>
+      </div>
+      <div class="kpi-icon">📡</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-content">
+        <span class="title">Alertas Críticas</span>
+        <h2>4 <span class="subtitle alert-text">Requieren atención</span></h2>
+      </div>
+      <div class="kpi-icon">🔔</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-content">
+        <span class="title">Volumen Tratado Hoy</span>
+        <h2>12,540 <span class="unit">m³</span></h2>
+        <span class="trend positive">+4.2% vs ayer</span>
+      </div>
+      <div class="kpi-icon">💧</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-content">
+        <span class="title">Eficiencia del Sistema</span>
+        <h2>92%</h2>
+        <span class="trend positive">Óptimo</span>
+      </div>
+      <div class="kpi-icon">✔️</div>
+    </div>
+  </div>
+
+  <!-- 2. Barra de Búsqueda y Filtro por Estado (NUEVO) -->
+  <div class="search-filter-bar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        placeholder="Buscar dispositivo o sensor..."
+        [(ngModel)]="searchTerm"
+      />
+    </div>
+
+    <div class="filter-box">
+      <select [(ngModel)]="selectedStatus">
+        <option value="ALL">Todos los estados</option>
+        <option value="Normal">Normal</option>
+        <option value="Advertencia">Advertencia</option>
+        <option value="Alerta">Alerta</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 3. Layout Principal con Tabla y Widgets -->
+  <div class="main-layout">
+    <!-- Panel Izquierdo: Tabla de Monitoreo -->
+    <div class="table-card">
+      <div class="table-header">
+        <h3>Monitoreo en Tiempo Real</h3>
+        <button class="btn-link">Ver mapa completo</button>
+      </div>
+
+      <table class="custom-table">
+        <thead>
+        <tr>
+          <th>Sensor</th>
+          <th>Tipo</th>
+          <th>Valor</th>
+          <th>Estado</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let device of filteredDevices">
+          <td><strong>{{ device.name }}</strong></td>
+          <td>{{ device.type }}</td>
+          <td>{{ device.value }}</td>
+          <td>
+              <span class="badge" [ngClass]="{
+                'normal': device.status === 'Normal',
+                'warning': device.status === 'Advertencia',
+                'danger': device.status === 'Alerta'
+              }">
+                {{ device.status }}
+              </span>
+          </td>
+        </tr>
+        <tr *ngInIf="filteredDevices.length === 0">
+          <td colspan="4" style="text-align: center; color: #94a3b8; padding: 20px;">
+            No se encontraron dispositivos con los filtros seleccionados.
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Panel Derecho: Widgets de Estado y Alertas -->
+    <div class="widgets-column">
+      <div class="widget-card">
+        <h3>Estado General del Sistema</h3>
+        <div class="alert-box warning-bg">
+          <strong>⚠️ Atención requerida</strong>
+          <p>Sistemas operando con desviaciones menores en presión.</p>
+          <ul>
+            <li>Puntos de operación: 5 de 6</li>
+            <li>Bombas activas: 8 de 18</li>
+            <li>Consumo de energía: 1,245 kWh</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="widget-card">
+        <div class="widget-header">
+          <h3>Alertas Recientes</h3>
+          <a routerLink="/deviations">Ver todas</a>
+        </div>
+        <div class="alert-item">
+          <p><strong>Dispositivo-03 (Presión)</strong> cerca del límite.</p>
+          <span class="badge warning">Advertencia</span>
+        </div>
+        <div class="alert-item">
+          <p><strong>Dispositivo-05 (Cloro)</strong> superó umbral permitido.</p>
+          <span class="badge danger">Crítica</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

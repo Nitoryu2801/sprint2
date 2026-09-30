@@ -1,0 +1,72 @@
+﻿<div class="lots-container">
+  <!-- Cabecera con Título y Botón de Acción -->
+  <div class="page-header">
+    <div>
+      <h2>Trazabilidad de Lotes Farmacéuticos</h2>
+      <p class="subtitle">Monitorea y gestiona el estado de producción de cada lote en planta.</p>
+    </div>
+    <a routerLink="/lots/new" class="btn-create">➕ Registrar Nuevo Lote</a>
+  </div>
+
+  <!-- Barra de Búsqueda y Filtros con Lupa -->
+  <div class="search-filter-bar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        placeholder="Buscar por ID Lote, Código o Nombre de Producto..."
+        [(ngModel)]="searchTerm"
+      />
+    </div>
+
+    <div class="filter-box">
+      <select [(ngModel)]="selectedStatus">
+        <option value="ALL">Todos los estados</option>
+        <option value="APPROVED">Aprobado</option>
+        <option value="IN_PROCESS">En Proceso</option>
+        <option value="QUARANTINE">Cuarentena</option>
+        <option value="REJECTED">Rechazado</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Tabla de Lotes -->
+  <div class="table-card">
+    <table class="custom-table">
+      <thead>
+      <tr>
+        <th>ID Lote</th>
+        <th>Código Prod.</th>
+        <th>Nombre del Producto</th>
+        <th>Cantidad</th>
+        <th>Estado</th>
+        <th>Fecha Expiración</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let lot of filteredLots">
+        <td><strong>{{ lot.id }}</strong></td>
+        <td><code>{{ lot.productId }}</code></td>
+        <td>{{ lot.productName }}</td>
+        <td>{{ lot.quantity | number }} u.</td>
+        <td>
+            <span class="badge" [ngClass]="{
+              'approved': lot.status === 'APPROVED',
+              'in_process': lot.status === 'IN_PROCESS',
+              'quarantine': lot.status === 'QUARANTINE',
+              'rejected': lot.status === 'REJECTED'
+            }">
+              {{ lot.status }}
+            </span>
+        </td>
+        <td>{{ lot.expirationDate }}</td>
+      </tr>
+      <tr *ngIf="filteredLots.length === 0">
+        <td colspan="6" class="empty-state">
+          No se encontraron lotes registrados con los filtros seleccionados.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
