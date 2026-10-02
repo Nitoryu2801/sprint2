@@ -20,7 +20,10 @@ export class LotListComponent implements OnInit {
   constructor(private lotsService: LotsService) {}
 
   ngOnInit(): void {
-    this.lotsService.getLots().subscribe(data => this.lots = data);
+    // cambios dinámicos
+    this.lotsService.getLots().subscribe(data => {
+      this.lots = data;
+    });
   }
 
   get filteredLots(): Lot[] {

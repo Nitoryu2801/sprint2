@@ -1,13 +1,12 @@
 ﻿import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
+import { delay, tap } from 'rxjs/operators';
 import { Lot, CreateLotResource } from '../models/lot.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LotsService {
-  // Arreglo inicial persistente en la sesión
   private lotsDatabase: Lot[] = [
     {
       id: 'LOT-101',
@@ -29,8 +28,14 @@ export class LotsService {
     }
   ];
 
+  // subject reactivo que mantendra la lista actualizada
+  private lotsSubject = new BehaviorSubject<Lot[]>([...this.lotsDatabase]);
+  public lots$ = this.lotsSubject.asObservable();
+
   getLots(): Observable<Lot[]> {
-    return of([...this.lotsDatabase]).pipe(delay(200));
+    // emitimos siempre la lista actual del subject
+    this.lotsSubject.next([...this.lotsDatabase]);
+    return this.lots$;
   }
 
   getLotById(id: string): Observable<Lot> {
@@ -48,7 +53,13 @@ export class LotsService {
       status: 'IN_PROCESS',
       createdAt: new Date()
     };
+
+    // Agregamos al inicio del arreglo en memoria
     this.lotsDatabase = [newLot, ...this.lotsDatabase];
+
+    // Notificamos a la app que hay un nuevo lote
+    this.lotsSubject.next([...this.lotsDatabase]);
+
     return of(newLot).pipe(delay(300));
   }
 }

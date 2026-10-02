@@ -2,7 +2,7 @@
 import { Router } from '@angular/router';
 import { LotsService } from '../../../../core/services/lots.service';
 import { CreateLotResource } from '../../../../core/models/lot.model';
-import {FormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-lot-create',
