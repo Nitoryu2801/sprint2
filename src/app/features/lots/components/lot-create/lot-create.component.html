@@ -2,20 +2,20 @@
   <h2>Registrar Nuevo Lote</h2>
   <form (ngSubmit)="onSubmit()">
     <div class="field">
-      <label>Código de Producto:</label>
-      <input type="text" [(ngModel)]="newLot.productId" name="productId" required>
+      <label for="productId">Código de Producto:</label>
+      <input id="productId" type="text" [(ngModel)]="newLot.productId" name="productId" required />
     </div>
     <div class="field">
-      <label>Nombre del Producto:</label>
-      <input type="text" [(ngModel)]="newLot.productName" name="productName" required>
+      <label for="productName">Nombre del Producto:</label>
+      <input id="productName" type="text" [(ngModel)]="newLot.productName" name="productName" required />
     </div>
     <div class="field">
-      <label>Cantidad:</label>
-      <input type="number" [(ngModel)]="newLot.quantity" name="quantity" required>
+      <label for="quantity">Cantidad:</label>
+      <input id="quantity" type="number" [(ngModel)]="newLot.quantity" name="quantity" required />
     </div>
     <div class="field">
-      <label>Fecha de Expiración:</label>
-      <input type="date" [(ngModel)]="newLot.expirationDate" name="expirationDate" required>
+      <label for="expirationDate">Fecha de Expiración:</label>
+      <input id="expirationDate" type="date" [(ngModel)]="newLot.expirationDate" name="expirationDate" required />
     </div>
     <button type="submit" class="btn">Guardar Lote</button>
   </form>

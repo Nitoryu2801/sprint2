@@ -1,26 +1,21 @@
 ﻿<div class="lots-container">
-  <!-- Cabecera con Título y Botón de Acción -->
   <div class="page-header">
     <div>
       <h2>Trazabilidad de Lotes Farmacéuticos</h2>
-      <p class="subtitle">Monitorea y gestiona el estado de producción de cada lote en planta.</p>
+      <p class="subtitle">Monitoreo en tiempo real del estado de producción.</p>
     </div>
     <a routerLink="/lots/new" class="btn-create">➕ Registrar Nuevo Lote</a>
   </div>
 
-  <!-- Barra de Búsqueda y Filtros con Lupa -->
   <div class="search-filter-bar">
     <div class="search-box">
       <span class="search-icon">🔍</span>
-      <input
-        type="text"
-        placeholder="Buscar por ID Lote, Código o Nombre de Producto..."
-        [(ngModel)]="searchTerm"
-      />
+      <!-- Búsqueda reactiva sin model binding -->
+      <input type="text" placeholder="Buscar ID, Código o Producto..." [formControl]="searchControl" />
     </div>
 
     <div class="filter-box">
-      <select [(ngModel)]="selectedStatus">
+      <select [formControl]="statusControl">
         <option value="ALL">Todos los estados</option>
         <option value="APPROVED">Aprobado</option>
         <option value="IN_PROCESS">En Proceso</option>
@@ -30,43 +25,49 @@
     </div>
   </div>
 
-  <!-- Tabla de Lotes -->
   <div class="table-card">
-    <table class="custom-table">
-      <thead>
-      <tr>
-        <th>ID Lote</th>
-        <th>Código Prod.</th>
-        <th>Nombre del Producto</th>
-        <th>Cantidad</th>
-        <th>Estado</th>
-        <th>Fecha Expiración</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let lot of filteredLots">
-        <td><strong>{{ lot.id }}</strong></td>
-        <td><code>{{ lot.productId }}</code></td>
-        <td>{{ lot.productName }}</td>
-        <td>{{ lot.quantity | number }} u.</td>
-        <td>
-            <span class="badge" [ngClass]="{
-              'approved': lot.status === 'APPROVED',
-              'in_process': lot.status === 'IN_PROCESS',
-              'quarantine': lot.status === 'QUARANTINE',
-              'rejected': lot.status === 'REJECTED'
-            }">
-              {{ lot.status }}
-            </span>
-        </td>
-        <td>{{ lot.expirationDate }}</td>
-      </tr>
-      <tr *ngIf="filteredLots.length === 0">
-        <td colspan="6" class="empty-state">
-          No se encontraron lotes registrados con los filtros seleccionados.
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <!-- Manejo de Estado de Carga y Error de forma declarativa con Control Flow de Angular 17+ -->
+    @if (lotsService.isLoading()) {
+      <div class="loading-state">Sincronizando con la red de producción...</div>
+    } @else if (lotsService.error()) {
+      <div class="error-state">⚠️ {{ lotsService.error() }}</div>
+    } @else {
+      <table class="custom-table">
+        <thead>
+        <tr>
+          <th>ID Lote</th>
+          <th>Código Prod.</th>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Estado</th>
+          <th>Expiración</th>
+        </tr>
+        </thead>
+      </table>
+
+      <!-- Virtual Scrolling para renderizar miles de lotes sin latencia -->
+      <cdk-virtual-scroll-viewport itemSize="56" class="virtual-scroll-viewport">
+        <table class="custom-table">
+          <tbody>
+          <tr *cdkVirtualFor="let lot of filteredLots(); templateCacheSize: 0">
+            <td><strong>{{ lot.id }}</strong></td>
+            <td><code>{{ lot.productId }}</code></td>
+            <td>{{ lot.productName }}</td>
+            <td>{{ lot.quantity | number }} u.</td>
+            <td>
+                <span class="badge" [ngClass]="lot.status.toLowerCase()">
+                  {{ lot.status }}
+                </span>
+            </td>
+            <td>{{ lot.expirationDate }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </cdk-virtual-scroll-viewport>
+
+      @if (filteredLots().length === 0) {
+        <div class="empty-state">No se encontraron lotes coincidentes.</div>
+      }
+    }
   </div>
 </div>

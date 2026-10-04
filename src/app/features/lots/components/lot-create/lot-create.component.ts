@@ -1,16 +1,16 @@
 ﻿import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LotsService } from '../../../../core/services/lots.service';
 import { CreateLotResource } from '../../../../core/models/lot.model';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-lot-create',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './lot-create.component.html',
-  imports: [
-    FormsModule
-  ],
-  styleUrls: ['./lot-create.component.css']
+  styleUrl: './lot-create.component.css'
 })
 export class LotCreateComponent {
   newLot: CreateLotResource = {

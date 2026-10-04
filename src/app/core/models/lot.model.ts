@@ -3,9 +3,10 @@
   productId: string;
   productName: string;
   quantity: number;
-  status: 'IN_PROCESS' | 'QUARANTINE' | 'APPROVED' | 'REJECTED';
+  status: 'APPROVED' | 'IN_PROCESS' | 'QUARANTINE' | 'REJECTED';
   expirationDate: string;
-  createdAt: Date;
+  createdAt?: string;
+  createAt?: string; // Compatibilidad por si se consume desde otra API
 }
 
 export interface CreateLotResource {

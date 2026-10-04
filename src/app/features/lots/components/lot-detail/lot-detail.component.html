@@ -46,7 +46,7 @@
 
         <div class="info-item">
           <label>Fecha de Creación</label>
-          <p>{{ lot.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+          <p>{{ (lot.createdAt || lot.createAt) ? ((lot.createdAt || lot.createAt) | date:'dd/MM/yyyy HH:mm') : 'N/A' }}</p>
         </div>
       </div>
     </div>
