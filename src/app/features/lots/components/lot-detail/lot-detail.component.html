@@ -1,0 +1,54 @@
+<div class="detail-container">
+  <div class="header-actions">
+    <a routerLink="/lots" class="btn-back">← Volver al listado</a>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <p>Cargando información del lote...</p>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="error-card">
+    <p>⚠️ {{ errorMessage }}</p>
+  </div>
+
+  <div *ngIf="lot && !isLoading" class="detail-card">
+    <div class="card-header">
+      <div>
+        <h2>Lote: {{ lot.id }}</h2>
+        <span class="product-code">Código Producto: {{ lot.productId }}</span>
+      </div>
+      <span class="badge" [ngClass]="{
+        'approved': lot.status === 'APPROVED',
+        'in_process': lot.status === 'IN_PROCESS',
+        'quarantine': lot.status === 'QUARANTINE',
+        'rejected': lot.status === 'REJECTED'
+      }">
+        {{ lot.status }}
+      </span>
+    </div>
+
+    <div class="card-body">
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Nombre del Producto</label>
+          <p>{{ lot.productName }}</p>
+        </div>
+
+        <div class="info-item">
+          <label>Cantidad Producida</label>
+          <p>{{ lot.quantity | number }} unidades</p>
+        </div>
+
+        <div class="info-item">
+          <label>Fecha de Expiración</label>
+          <p>{{ lot.expirationDate }}</p>
+        </div>
+
+        <div class="info-item">
+          <label>Fecha de Creación</label>
+          <p>{{ lot.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
